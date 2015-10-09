@@ -23,7 +23,7 @@ from waterbutler.providers.sharelatex.metadata import ShareLatexFileMetadataHead
 
 
 class ShareLatexProvider(provider.BaseProvider):
-    """Provider for the Amazon's ShareLatex
+    """Provider for the ShareLatex
     """
     NAME = 'sharelatex'
 
