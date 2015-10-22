@@ -22,12 +22,13 @@ class ShareLatexProvider(provider.BaseProvider):
     def validate_path(self, path, **kwargs):
         return WaterButlerPath(path)
 
-    def _build_content_url(self, *segments, **query):
-        return provider.build_url(settings.BASE_CONTENT_URL, *segments, **query)
+    def _build_project_url(self, *segments, **query):
+        project_url = '/' + self.project_id + segments
+        return provider.build_url(project_url, **query)
 
     @asyncio.coroutine
     def download(self, path, **kwargs):
-        url = self._build_content_url(path.path)
+        url = self._build_project_url(path.path)
 
         resp = yield from self.make_request(
             'GET',
@@ -41,7 +42,7 @@ class ShareLatexProvider(provider.BaseProvider):
     @asyncio.coroutine
     def upload(self, stream, path, conflict='replace', **kwargs):
         path, exists = yield from self.handle_name_conflict(path, conflict=conflict)
-        url = self._build_content_url(path.path)
+        url = self._build_project_url(path.path)
 
         resp = yield from self.make_request(
             'PUT',
@@ -57,7 +58,7 @@ class ShareLatexProvider(provider.BaseProvider):
 
     @asyncio.coroutine
     def delete(self, path, **kwargs):
-        url = self._build_content_url(path.path)
+        url = self._build_project_url(path.path)
         yield from self.make_request(
             'DELETE',
             url,
@@ -67,7 +68,7 @@ class ShareLatexProvider(provider.BaseProvider):
 
     @asyncio.coroutine
     def metadata(self, path, **kwargs):
-        url = self._build_content_url(path.path)
+        url = self._build_project_url(path.path)
 
         resp = yield from self.make_request(
             'GET', url,
